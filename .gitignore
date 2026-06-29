@@ -1,0 +1,20 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore only local secret files
+*.secret.tfvars
+*local.tfvars
+secret.tfvars
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
