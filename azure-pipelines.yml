@@ -1,0 +1,49 @@
+trigger:
+- main # Jaise hi main branch par push hoga, pipeline chalegi
+
+pool:
+  vmImage: 'ubuntu-latest' # Microsoft ka default agent machine
+
+variables:
+  azureServiceConnection: 'azure-sp-connection' # Jo aapne abhi banaya
+  resourceGroup: 'rg-terraform-state'
+  storageAccount: 'aqibtfstate2000'
+  container: 'tfstate'
+  tfstateKey: 'dev.terraform.tfstate'
+
+steps:
+# 1. Installer: Agent machine par Terraform install karega
+- task: TerraformInstaller@1
+  displayName: 'Install Terraform'
+  inputs:
+    terraformVersion: 'latest'
+
+# 2. Init: Remote backend se connect karega
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Init'
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: '$(azureServiceConnection)'
+    backendAzureRmResourceGroupName: '$(resourceGroup)'
+    backendAzureRmStorageAccountName: '$(storageAccount)'
+    backendAzureRmContainerName: '$(container)'
+    backendAzureRmKey: '$(tfstateKey)'
+
+# 3. Plan: Infrastructure changes generate karega
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Plan'
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    environmentServiceNameAzureRM: '$(azureServiceConnection)'
+    commandOptions: '-var-file="dev.tfvars"'
+
+# 4. Apply: Azure par resources automatically deploy/sync karega
+- task: TerraformTaskV4@4
+  displayName: 'Terraform Apply'
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    environmentServiceNameAzureRM: '$(azureServiceConnection)'
+    commandOptions: '-var-file="dev.tfvars" -auto-approve'
