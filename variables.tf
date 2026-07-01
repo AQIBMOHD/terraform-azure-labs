@@ -12,7 +12,7 @@ variable "location" {
 
 variable "vnet_name" {
   description = "Virtual Network Name"
-  type        = string 
+  type        = string
 }
 
 variable "address_space" {

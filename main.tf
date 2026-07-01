@@ -1,27 +1,37 @@
 module "resourcegroup" {
-  source = "./modules/resource-group"
+  source              = "./modules/resource-group"
   resource_group_name = var.resource_group_name
-  location = var.location
+  location            = var.location
 }
 
 
-module "network"{
-  source = "./modules/network"
-  vnet_name = var.vnet_name
-  address_space = var.address_space
-  location = var.location
-  resource_group_name = var.resource_group_name 
+module "network" {
+  source              = "./modules/network"
+  vnet_name           = var.vnet_name
+  address_space       = var.address_space
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
 }
 
 
 
-module "security"{
+module "security" {
   source              = "./modules/security"
-  frontend_subnet_id  = module.network.frontend_subnet_id 
-  backend_subnet_id   = module.network.backend_subnet_id  
+  frontend_subnet_id  = module.network.frontend_subnet_id
+  backend_subnet_id   = module.network.backend_subnet_id
   resource_group_name = module.resourcegroup.name
   location            = module.resourcegroup.location
+}
+
+
+module "compute" {
+  source              = "./modules/compute"
+  frontend_subnet_id  = module.network.frontend_subnet_id
+  location            = module.resourcegroup.location
+  resource_group_name = module.resourcegroup.name
+
+
 }
 
 
