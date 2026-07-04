@@ -1,3 +1,7 @@
+data "http" "my_public_ip" {
+    url = "https://api.ipify.org"
+}
+
 
 resource "azurerm_network_security_group" "frontend_nsg" {
   name                = "${var.naming_prefix}-frontend-nsg"
@@ -56,7 +60,7 @@ resource "azurerm_network_security_rule" "frontend_ssh" {
   source_port_range      = "*"
   destination_port_range = "22"
 
-  source_address_prefix      = "*"
+  source_address_prefix      = "${data.http.my_public_ip.response_body}/32"
   destination_address_prefix = "*"
 
   resource_group_name  = var.resource_group_name
@@ -93,7 +97,7 @@ resource "azurerm_network_security_rule" "backend_ssh" {
   source_port_range      = "*"
   destination_port_range = "22"
 
-  source_address_prefix      = "*"
+  source_address_prefix      = "${data.http.my_public_ip.response_body}/32"
   destination_address_prefix = "*"
 
 
