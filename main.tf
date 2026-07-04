@@ -1,12 +1,17 @@
 locals {
   owner_name = "aqib"
+  resource_prefix = "lab01-dev"
 }
+
+
+
 
 
 module "resourcegroup" {
   source              = "./modules/resource-group"
   resource_group_name = var.resource_group_name
   location            = var.location
+
 
   owner = local.owner_name
 
@@ -21,6 +26,7 @@ module "network" {
   address_space       = var.address_space
   location            = var.location
   resource_group_name = var.resource_group_name
+  naming_prefix = local.resource_prefix
 
 }
 
@@ -32,6 +38,7 @@ module "security" {
   backend_subnet_id   = module.network.backend_subnet_id
   resource_group_name = module.resourcegroup.name
   location            = module.resourcegroup.location
+  naming_prefix = local.resource_prefix
 }
 
 
@@ -40,6 +47,7 @@ module "compute" {
   frontend_subnet_id  = module.network.frontend_subnet_id
   location            = module.resourcegroup.location
   resource_group_name = module.resourcegroup.name
+  naming_prefix = local.resource_prefix
 
 
 }

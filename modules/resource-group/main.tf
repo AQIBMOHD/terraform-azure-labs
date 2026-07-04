@@ -6,4 +6,5 @@ resource "azurerm_resource_group" "rg" {
     Owner = var.owner
   }
 
+
 }

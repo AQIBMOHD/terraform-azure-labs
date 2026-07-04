@@ -11,3 +11,8 @@ variable "frontend_subnet_id"{
     type = string
 }
 
+variable "naming_prefix"{
+    type = string
+ }
+
+

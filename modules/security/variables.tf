@@ -19,4 +19,8 @@ variable "location"{
     type        = string
  } 
 
+ variable "naming_prefix"{
+    type = string
+ }
+
  

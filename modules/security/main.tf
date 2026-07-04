@@ -1,6 +1,6 @@
 
 resource "azurerm_network_security_group" "frontend_nsg" {
-  name                = "frontend-nsg"
+  name                = "${var.naming_prefix}-frontend-nsg"
   resource_group_name = var.resource_group_name
   location            = var.location
 
@@ -8,13 +8,13 @@ resource "azurerm_network_security_group" "frontend_nsg" {
 } 
 
 resource "azurerm_network_security_group" "backend_nsg" {
-  name                = "backend-nsg"
+  name                = "${var.naming_prefix}-backend-nsg"
   resource_group_name = var.resource_group_name
   location            = var.location
  
 }
 resource "azurerm_network_security_rule" "frontend_http" {
-  name                        = "allow-http"
+  name                        = "${var.naming_prefix}-allow-http"
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
@@ -30,7 +30,7 @@ resource "azurerm_network_security_rule" "frontend_http" {
 }
 
 resource "azurerm_network_security_rule" "frontend_https" {
-  name      = "allow-https"
+  name      = "${var.naming_prefix}-allow-https"
   priority  = 110
   direction = "Inbound"
   access    = "Allow"
@@ -47,7 +47,7 @@ resource "azurerm_network_security_rule" "frontend_https" {
 }
 
 resource "azurerm_network_security_rule" "frontend_ssh" {
-  name      = "allow-ssh"
+  name      = "${var.naming_prefix}-allow-ssh"
   priority  = 120
   direction = "Inbound"
   access    = "Allow"
@@ -65,7 +65,7 @@ resource "azurerm_network_security_rule" "frontend_ssh" {
 
 
 resource "azurerm_network_security_rule" "backend_api" {
-  name      = "allow-api"
+  name      = "${var.naming_prefix}-allow-api"
   priority  = 100
   direction = "Inbound"
   access    = "Allow"
@@ -83,7 +83,7 @@ resource "azurerm_network_security_rule" "backend_api" {
 }
 
 resource "azurerm_network_security_rule" "backend_ssh" {
-  name      = "allow-ssh"
+  name      = "${var.naming_prefix}-allow-ssh"
   priority  = 110
   direction = "Inbound"
   access    = "Allow"

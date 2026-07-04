@@ -20,3 +20,8 @@ variable "address_space" {
   description = "Vnet Address Space"
   type        = list(string)
 }
+
+variable "naming_prefix"{
+    type = string
+}
+

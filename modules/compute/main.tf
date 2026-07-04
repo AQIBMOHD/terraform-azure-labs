@@ -1,6 +1,6 @@
 # 1 public Ip for VM 
 resource "azurerm_public_ip" "frontend_pip"{
-name ="frontend-pip" 
+name ="${var.naming_prefix}-frontend-pip" 
 location = var.location
 resource_group_name=var.resource_group_name
 allocation_method="Static"
@@ -10,7 +10,7 @@ sku ="Standard"
 
 #2 Network Interface (NIC) for VM
 resource "azurerm_network_interface" "frontend_vm_nic"{
-    name="frontend_vm_nic"
+    name="${var.naming_prefix}-frontend-vm-nic"
     location=var.location
     resource_group_name=var.resource_group_name
 
@@ -24,7 +24,7 @@ resource "azurerm_network_interface" "frontend_vm_nic"{
 }
 
 resource "azurerm_linux_virtual_machine" "frontend_vm" {
-  name                = "frontend-vm"
+  name                = "${var.naming_prefix}-frontend-vm"
   resource_group_name = var.resource_group_name
   location            = var.location
   size                = "Standard_B2as_v2"
