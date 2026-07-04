@@ -65,6 +65,11 @@ We refactored this codebase from a **monolithic** structure (everything in root 
 * **Code:** Wrote `azure-pipelines.yml` at the root of the repository.
 * **Execution:** Ran the pipeline in Azure DevOps. It installed Terraform, initialized, planned, and applied changes automatically with 100% success (all green!).
 
+### Step 8: Dynamic Naming Convention using Terraform Locals (Unified Prefix)
+* **Action:** Added a `locals` block in root `main.tf` defining `resource_prefix = "lab01-dev"`.
+* **Flow:** Passed `naming_prefix = local.resource_prefix` into the Network, Security, and Compute child modules.
+* **Result:** Dynamically prepended `${var.naming_prefix}-` to all VMs, subnets, NSGs, NICs, and PIPs across the entire project in a single centralized configuration change.
+
 ---
 
 ## 3. Conceptual Q&A Digest: Your Questions Explained
@@ -124,5 +129,12 @@ We used a **Warehouse Analogy** to understand this:
 * **Azure DevOps:** A platform to automate workflows via CI/CD pipelines.
 * **Service Connection:** A secure bridge that authorizes Azure DevOps to log into Azure and manage resources on your behalf using a Service Principal.
 * **Extensions:** Azure DevOps is a general-purpose tool. To recognize and execute special YAML tasks like `TerraformTaskV4`, we must install the **Terraform Extension** from the Visual Studio Marketplace to add those capabilities.
+
+### Q12: Is the CI/CD pipeline mandatory to apply locals/HCL changes?
+* **Technically No:** You can execute `terraform apply` locally from your personal computer's terminal if you have authenticated via Azure CLI (`az login`) or environment variables.
+* **Professionally Yes (Enterprise Standard):** In actual companies, direct laptop deployments are blocked for security, audit, tracking, and compliance. All changes must go through a Git repository pull request and be deployed exclusively via automated pipelines.
+
+### Q13: Why does changing name attributes trigger resource replacement (Plan: 14 to destroy)?
+* **Destructive vs Non-destructive Updates:** In Azure, resources like Virtual Machines, Subnets, and Network Security Groups cannot be renamed while running. Changing their `name` attribute in HCL tells Terraform to delete (destroy) the old resource and provision a new one from scratch. Modifying tags, however, is supported in-place (non-destructive) by Azure APIs.
 
 ---
